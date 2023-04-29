@@ -1,0 +1,21 @@
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %}
+{% block content%}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+  <div style="display: flex; flex-direction: column; align-items: center;">
+    <h1 style="text-align: left; margin-left: 20px;">Admin</h1>
+    <div style="border: 1px solid black; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+      <a href="{{ url_for('officers') }}" style="display: flex; justify-content: center; align-items: center; width: 200px; height: 100px; text-align: center; font-size: 24px; font-weight: bold; border: 2px solid black; border-radius: 15px; padding: 20px;">Officers</a>
+    </div>
+    <div style="border: 1px solid black; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+      <a href="{{ url_for('criminals') }}" style="display: flex; justify-content: center; align-items: center; width: 200px; height: 100px; text-align: center; font-size: 24px; font-weight: bold; border: 2px solid black; border-radius: 15px; padding: 20px;">Criminals</a>
+    </div>
+    <div style="border: 1px solid black; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+      <a href="{{ url_for('crimes') }}" style="display: flex; justify-content: center; align-items: center; width: 200px; height: 100px; text-align: center; font-size: 24px; font-weight: bold; border: 2px solid black; border-radius: 15px; padding: 20px;">Crimes</a>
+    </div>
+    <div style="border: 1px solid black; padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+      <a href="{{ url_for('p_signup') }}" style="display: flex; justify-content: center; align-items: center; width: 200px; height: 100px; text-align: center; font-size: 24px; font-weight: bold; border: 2px solid black; border-radius: 15px; padding: 20px;">Police Sign Up</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

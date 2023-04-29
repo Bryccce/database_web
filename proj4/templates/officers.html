@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Officers{% endblock %}
+
+{% block content %}
+  <style>
+    .officer-row {
+      background-color: #f0f0f0;
+    }
+  </style>
+  <script>
+    function toggleUpdateForm(rowId) {
+      const form = document.getElementById('updateForm-' + rowId);
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+    //toggle the visibility of the add officer form
+    function toggleAddOfficerForm() {
+      const form = document.getElementById('addOfficerForm');
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+  </script>
+
+  <form action="{{ url_for('officers') }}" method="get">
+    <input type="text" name="search" placeholder="Search By Officer ID">
+    <input type="submit" value="Search">
+  </form>
+  <button onclick="toggleAddOfficerForm()">Add Officer</button>
+  <div id="addOfficerForm" style="display: none; flex-direction: column; margin-bottom: 10px;">
+    <form action="{{ url_for('insert_officer') }}" method="post">
+      <label for="last_name">Last Name:</label>
+      <input type="text" name="last_name" required>
+      <label for="first_name">First Name:</label>
+      <input type="text" name="first_name" required>
+      <label for="precinct">Precinct:</label>
+      <input type="text" name="precinct" required>
+      <label for="badge_number">Badge Number:</label>
+      <input type="number" name="badge_number" required>
+      <label for="phone_number">Phone Number:</label>
+      <input type="text" name="phone_number" required>
+      <label for="status">Status:</label>
+      <input type="text" name="status" required>
+      <input type="submit" value="Add Officer">
+    </form>
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <div class="officer-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+      <div style="flex-basis: 10%;">Officer ID</div>
+      <div style="flex-basis: 20%;">Last Name</div>
+      <div style="flex-basis: 20%;">First Name</div>
+      <div style="flex-basis: 10%;">Precinct</div>
+      <div style="flex-basis: 10%;">Badge Number</div>
+      <div style="flex-basis: 20%;">Phone Number</div>
+      <div style="flex-basis: 10%;">Status</div>
+    </div>
+    {% for officer in data %}
+    <div class="officer-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+        <div style="flex-basis: 10%;">{{ officer[0] }}</div>
+        <div style="flex-basis: 20%;">{{ officer[1] }}</div>
+        <div style="flex-basis: 20%;">{{ officer[2] }}</div>
+        <div style="flex-basis: 10%;">{{ officer[3] }}</div>
+        <div style="flex-basis: 10%;">{{ officer[4] }}</div>
+        <div style="flex-basis: 20%;">{{ officer[5] }}</div>
+        <div style="flex-basis: 10%;">{{ officer[6] }}</div>
+      </div>
+      <div id="updateForm-{{ loop.index }}" style="display: none; flex-direction: column; margin-bottom: 10px;">
+        <form action="{{ url_for('update_officer') }}" method="post">
+          <label for="officer_id">Officer ID:</label>
+          <input type="number" name="officer_id" value="{{ officer[0] }}" required readonly>
+          <label for="last_name">Last Name:</label>
+          <input type="text" name="last_name" value="{{ officer[1] }}" required>
+          <label for="first_name">First Name:</label>
+          <input type="text" name="first_name" value="{{ officer[2] }}" required>
+          <label for="precinct">Precinct:</label>
+          <input type="text" name="precinct" value="{{ officer[3] }}" required>
+          <label for="badge_number">Badge Number:</label>
+          <input type="number" name="badge_number" value="{{ officer[4] }}" required>
+          <label for="phone_number">Phone Number:</label>
+          <input type="text" name="phone_number" value="{{ officer[5] }}" required>
+          <label for="status">Status:</label>
+          <input type="text" name="status" value="{{ officer[6] }}" required>
+          <input type="submit" value="Update Officer">
+        </form>
+      </div>
+      <div style="display: flex; flex-direction: row; margin-bottom: 10px;">
+        <button onclick="toggleUpdateForm('{{ loop.index }}')">Update</button>
+        <form action="{{ url_for('delete_officer', officer_id=officer[0]) }}" method="post" style="margin-left: 10px;">
+          <input type="hidden" name="officer_id" value="{{ officer[0] }}">
+          <input type="submit" value="Delete">
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+

@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Criminals{% endblock %}
+
+{% block content %}
+  <style>
+    .criminal-row {
+      background-color: #f0f0f0;
+    }
+  </style>
+  <script>
+    function toggleUpdateForm(rowId) {
+      const form = document.getElementById('updateForm-' + rowId);
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+    
+    function toggleAddCriminalForm() {
+      const form = document.getElementById('addCriminalForm');
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+  </script>
+  <br></br>
+  <a href="{{ url_for('aliases') }}" class="btn btn-primary" style="font-size: 1.2em;">Go to alias page</a>
+  <br></br>
+  <form action="{{ url_for('criminals') }}" method="get">
+    <input type="text" name="search" placeholder="Search By Criminal ID">
+    <input type="submit" value="Search">
+  </form>
+  <button onclick="toggleAddCriminalForm()">Add Criminal</button>
+  <div id="addCriminalForm" style="display: none; flex-direction: column; margin-bottom: 10px;">
+    <form action="{{ url_for('insert_criminal') }}" method="post">
+      <label for="last_name">Last Name:</label>
+      <input type="text" name="last_name" required>
+      <label for="first_name">First Name:</label>
+      <input type="text" name="first_name" required>
+      <label for="street">Street:</label>
+      <input type="text" name="street" required>
+      <label for="city">City:</label>
+      <input type="text" name="city" required>
+      <label for="state">State:</label>
+      <input type="text" name="state" required>
+      <label for="zip">Zip:</label>
+      <input type="text" name="zip" required>
+      <label for="phone">Phone:</label>
+      <input type="text" name="phone" required>
+      <label for="V_status">V Status:</label>
+      <input type="text" name="V_status" required>
+      <label for="p_status">P Status:</label>
+      <input type="text" name="p_status" required>
+      <input type="submit" value="Add Criminal">
+    </form>
+  </div>
+  <div style="display: flex; flex-direction: column;">
+    <div class="criminal-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+      <div style="flex-basis: 10%;">Criminal ID</div>
+      <div style="flex-basis: 10%;">last Name</div>
+      <div style="flex-basis: 10%;">first Name</div>
+      <div style="flex-basis: 20%;">street</div>
+      <div style="flex-basis: 10%;">city</div>
+      <div style="flex-basis: 10%;">state</div>
+      <div style="flex-basis: 10%;">zip</div>
+      <div style="flex-basis: 10%;">phone</div>
+      <div style="flex-basis: 5%;">V</div>
+      <div style="flex-basis: 5%;">P</div>
+    </div>
+    {% for criminal in data %}
+    <div class="criminal-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+      <div style="flex-basis: 10%;">{{ criminal[0] }}</div>
+      <div style="flex-basis: 10%;">{{ criminal[1] }}</div>
+      <div style="flex-basis: 10%;">{{ criminal[2] }}</div>
+      <div style="flex-basis: 20%;">{{ criminal[3] }}</div>
+      <div style="flex-basis: 10%;">{{ criminal[4] }}</div>
+      <div style="flex-basis: 10%;">{{ criminal[5] }}</div>
+      <div style="flex-basis: 10%;">{{ criminal[6] }}</div>
+      <div style="flex-basis: 10%;">{{ criminal[7] }}</div>
+      <div style="flex-basis: 5%;">{{ criminal[8] }}</div>
+      <div style="flex-basis: 5%;">{{ criminal[9] }}</div>
+      
+    </div>
+    <div id="updateForm-{{ loop.index }}" style="display: none; flex-direction: column; margin-bottom: 10px;">
+      <form action="{{ url_for('update_criminal') }}" method="post">
+        <label for="criminal_id">Criminal ID:</label>
+        <input type="number" name="criminal_id" value="{{ criminal[0] }}" required readonly>
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" value="{{ criminal[1] }}" required>
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" value="{{ criminal[2] }}" required>
+        <label for="street">Street:</label>
+        <input type="text" name="street" value="{{ criminal[3] }}" required>
+        <label for="city">City:</label>
+        <input type="text" name="city" value="{{ criminal[4] }}" required>
+        <label for="state">State:</label>
+        <input type="text" name="state" value="{{ criminal[5] }}" required>
+        <label for="zip">Zip:</label>
+        <input type="number" name="zip" value="{{ criminal[6] }}" required>
+        <label for="phone">Phone:</label>
+        <input type="number" name="phone" value="{{ criminal[7] }}" required>
+        <label for="V">V:</label>
+        <input type="text" name="V" value="{{ criminal[8] }}" required>
+        <label for="P">P:</label>
+        <input type="text" name="P" value="{{ criminal[9] }}" required>
+        <input type="submit" value="Update criminal">
+      </form>
+    </div>
+    <div style="display: flex; flex-direction: row; margin-bottom: 10px;">
+      <button onclick="toggleUpdateForm('{{ loop.index }}')">Update</button>
+      <form action="{{ url_for('delete_criminal', criminal_id=criminal[0]) }}" method="post" style="margin-left: 10px;">
+        <input type="hidden" name="criminal_id" value="{{ criminal[0] }}">
+        <input type="submit" value="Delete">
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+

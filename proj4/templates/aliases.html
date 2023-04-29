@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Aliases{% endblock %}
+{% block content%}
+<style>
+    .alias-row {
+      background-color: #f0f0f0;
+    }
+</style>
+<script>
+    function toggleUpdateForm(rowId) {
+      const form = document.getElementById('updateForm-' + rowId);
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+
+    function toggleAddaliasForm() {
+      const form = document.getElementById('addaliasForm');
+      form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+    }
+</script>
+<button onclick="toggleAddaliasForm()">Add Alias</button>
+<div id="addaliasForm" style="display: none; flex-direction: column; margin-bottom: 10px;">
+    <form action="{{ url_for('insert_alias') }}" method="post">
+      <label for="alias">Alias:</label>
+      <input type="text" name="alias" required>
+      <label for="criminal_id">Criminal ID:</label>
+      <input type="number" name="criminal_id" required>
+      <input type="submit" value="Add alias">
+    </form>
+</div>
+<div style="display: flex; flex-direction: column;">
+    <div class="alias-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+        <div style="flex-basis: 40%;">Alias</div>
+        <div style="flex-basis: 30%;">Criminal ID</div>
+        <div style="flex-basis: 30%;">Alias ID</div>
+    </div>
+    {% for alias in data %}
+  <div class="alias-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+    <div style="flex-basis: 40%;">{{ alias[0] }}</div>
+    <div style="flex-basis: 30%;">{{ alias[1] }}</div>
+    <div style="flex-basis: 30%;">{{ alias[2] }}</div>
+  </div>
+  <div style="display: flex; flex-direction: row; border: null black; padding: 10px; margin-bottom: 10px;">
+    <button onclick="toggleUpdateForm('{{ alias[2] }}')" style="margin-right: 10px;">Update</button>
+    <form action="{{ url_for('delete_alias', alias_id=alias[2]) }}" method="post" style="margin-right: 10px;">
+      <input type="submit" value="Delete">
+    </form>
+    <div id="updateForm-{{ alias[2] }}" style="display: none; flex-direction: column;">
+      <form action="{{ url_for('update_alias') }}" method="post">
+        <input type="hidden" name="alias_id" value="{{ alias[2] }}">
+        <label for="alias">Alias:</label>
+        <input type="text" name="alias" value="{{ alias[0] }}" required>
+        <label for="criminal_id">Criminal ID:</label>
+        <input type="number" name="criminal_id" value="{{ alias[1] }}" required>
+        <input type="submit" value="Update alias">
+      </form>
+    </div>
+  </div>
+{% endfor %}
+
+</div>
+{% endblock %}

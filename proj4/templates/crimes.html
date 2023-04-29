@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Crimes{% endblock %}
+
+{% block content %}
+<style>
+  .crime-row {
+    background-color: #f0f0f0;
+  }
+</style>
+<script>
+  function toggleUpdateForm(rowId) {
+    const form = document.getElementById('updateForm-' + rowId);
+    form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+  }
+  
+  //toggle the visibility of the add crime form
+  function toggleAddcrimeForm() {
+    const form = document.getElementById('addcrimeForm');
+    form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+  }
+</script>
+<form action="{{ url_for('crimes') }}" method="get">
+  <input type="text" name="search" placeholder="Search By crime ID">
+  <input type="submit" value="Search">
+</form>
+<button onclick="toggleAddCrimeForm()">Add Crime</button>
+<div id="addCrimeForm" style="display: none; flex-direction: column; margin-bottom: 10px;">
+  <form action="{{ url_for('insert_crime') }}" method="post">
+    <label for="crime_id">Crime ID:</label>
+    <input type="text" name="crime_id" required>
+    <label for="criminal_id">Criminal ID:</label>
+    <input type="text" name="criminal_id" required>
+    <label for="classification">Classification:</label>
+    <input type="text" name="classification" required>
+    <label for="date_charged">Date_charged:</label>
+    <input type="text" name="date_charged" required>
+    <label for="status">Status:</label>
+    <input type="text" name="status" required>
+    <label for="hearing_date">Hearing_date:</label>
+    <input type="text" name="hearing_date" required>
+    <label for="appeal_cut_date">Appeal_cut_date:</label>
+    <input type="text" name="appeal_cut_date" required>
+    <input type="submit" value="Add Crime">
+  </form>
+</div>
+  <div style="display: flex; flex-direction: column;">
+    <div class="crime-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;">
+      <div style="flex-basis: 5%;">crime ID</div>
+      <div style="flex-basis: 15%;">criminal ID</div>
+      <div style="flex-basis: 20%;">classification</div>
+      <div style="flex-basis: 15%;">date charged</div>
+      <div style="flex-basis: 10%;">status</div>
+      <div style="flex-basis: 20%;">hearing date</div>
+      <div style="flex-basis: 15%;">appeal cut date</div>
+    </div>
+    {% for crime in data %}
+      <div class="crime-row" style="display: flex; flex-direction: row; border: 1px solid black; padding: 10px; margin-bottom: 10px;"> 
+        <div style="flex-basis: 5%;">{{ crime[0] }}</div>
+        <div style="flex-basis: 15%;">{{ crime[1] }}</div>
+        <div style="flex-basis: 20%;">{{ crime[2] }}</div>
+        <div style="flex-basis: 15%;">{{ crime[3] }}</div>
+        <div style="flex-basis: 10%;">{{ crime[4] }}</div>
+        <div style="flex-basis: 20%;">{{ crime[5] }}</div>
+        <div style="flex-basis: 15%;">{{ crime[6] }}</div>
+      </div>
+      <div id="updateForm-{{ loop.index }}" style="display: none; flex-direction: column; margin-bottom: 10px;">
+        <form action="{{ url_for('update_crime') }}" method="post">
+          <label for="crime_id">crime ID:</label>
+          <input type="number" name="crime_id" value="{{ crime[0] }}" required readonly>
+          <label for="criminal_id">Criminal_ID:</label>
+          <input type="text" name="criminal_id" value="{{ crime[1] }}" required>
+          <label for="classification">Classification:</label>
+          <input type="text" name="classification" value="{{ crime[2] }}" required>
+          <label for="date_charged">Date_charged:</label>
+          <input type="text" name="date_charged" value="{{ crime[3] }}" required>
+          <label for="status">Status:</label>
+          <input type="text" name="status" value="{{ crime[4] }}" required>
+          <label for="hearing_date">Hearing_date:</label>
+          <input type="text" name="hearing_date" value="{{ crime[5] }}" required>
+          <label for="appeal_cut_date">Appeal_cut_date:</label>
+          <input type="text" name="appeal_cut_date" value="{{ crime[6] }}" required>
+          <input type="submit" value="Update crime">
+        </form>
+      </div>
+      <div style="display: flex; flex-direction: row; margin-bottom: 10px;">
+        <button onclick="toggleUpdateForm('{{ loop.index }}')">Update</button>
+        <form action="{{ url_for('delete_crime', crime_id=crime[0]) }}" method="post" style="margin-left: 10px;">
+          <input type="hidden" name="crime_id" value="{{ crime[0] }}">
+          <input type="submit" value="Delete">
+        </form>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
